@@ -1,0 +1,22 @@
+# Byte-compiled / build
+__pychache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtualvenvs (in case it's created a .venv in here)
+.venv/
+venv/
+
+# ABAC-Mongo artifacts
+old_policies/
+test.py
+
+# Logs / Historic primpts
+*.Logs
+.northwind_history
+
+# Editor /OS
+-vscode/
+.DS_store

@@ -1,0 +1,31 @@
+{
+  "uid": "om_self_orders_crud",
+  "description": "ordersManager (non-chief) may create, read, update and delete only their own orders",
+  "targets": {
+    "action_id": ["create", "read", "update", "delete"]
+  },
+  "rules": {
+    "subject": {
+      "$.role":    { "condition": "Equals",           "value": "ordersManager" },
+      "$.isChief": { "condition": "Equals",           "value": false }
+    },
+    "resource": {
+      "$.type":        { "condition": "Equals",      "value": "order" },
+      "$.employee_id": {
+        "condition":    "EqualsAttribute",
+        "ace":          "subject",
+        "path":         "$.id"
+      }
+    },
+    "context": {
+      "$.ip":      { "condition": "IsIn",     "value": ["10.10.10.10", "10.10.20.10"] },
+      "$.weekday": { "condition": "IsIn",     "value": ["Mon","Tue","Wed","Thu","Fri"] },
+      "$.hour":    { "condition": "AllOf",    "value": [
+         { "condition": "Gte", "value": 8 },
+         { "condition": "Lt",  "value": 19 }
+      ]}
+    }
+  },
+  "effect":   "allow",
+  "priority": 5
+}
