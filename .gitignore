@@ -14,7 +14,7 @@ old_policies/
 test.py
 
 # Logs / Historic primpts
-*.Logs
+*.log
 .northwind_history
 
 # Editor /OS
