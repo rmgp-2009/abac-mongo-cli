@@ -9,7 +9,7 @@ import json
 import os
 import logging
 
-from py_abac import PDP, Policy, Request
+from py_abac import PDP, Policy, Request, EvaluationAlgorithm
 from py_abac.storage.mongo import MongoStorage, MongoMigrationSet
 from py_abac.storage.migration import Migrator
 
@@ -37,7 +37,7 @@ def load_policies(storage, policies_dir="policies"):
                 storage.add(Policy.from_json(policy_json))
                 print(f"  ✔ Loaded {policy_json.get('uid')}")
         except Exception as exc:
-            # Ignorar duplicados ou ficheiros inválidos
+            # Ignore duplicates or invalid files
             # print(f"Falhou {path}: {exc}")
             print(f"  ⚠ Skipping {os.path.basename(path)}: {exc}")
             pass
@@ -57,8 +57,9 @@ def initialize_pdp(client, db_name="Northwind", policies_dir="policies"):
     # 3) load all policies/*.json
     load_policies(storage, policies_dir=policies_dir)
 
+
     # 4) return the PDP
-    return PDP(storage)
+    return PDP(storage, EvaluationAlgorithm.HIGHEST_PRIORITY)
 
 def build_request(subject_id, subject_attrs,
                   resource_id, resource_attrs,

@@ -70,7 +70,7 @@ All ABAC policies live as JSON files in the `policies/` directory.
 ## Logs
 
 - `abac.log` - detailed traced of every policy load and ABAC decision (INFO+).
-- `cli.log` - recors of each login and MongoDB action initiated by a user.
+- `cli.log` - records of each login and MongoDB action initiated by a user.
 Both files are generated in the directory where you run `abac-mongo`.
 
 ## MongoDB Login
