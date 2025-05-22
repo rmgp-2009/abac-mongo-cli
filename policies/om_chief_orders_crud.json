@@ -1,0 +1,37 @@
+{
+    "uid": "om_chief_orders_crud",
+    "description": "ordersManager (chief) may create, read, update and delete any order",
+    "targets": {
+        "subject_id": "*",
+        "resource_id": "orders",
+        "action_id": "*"
+    },
+    "rules": {
+        "subject": {
+            "$.role": {
+                "condition": "Equals",
+                "value": "ordersManager"
+            },
+            "$.isChief": {
+                "condition": "Eq",
+                "value": 1
+            }
+        },
+        "context": {
+            "$.ip": {
+                "condition": "CIDR",
+                "value": "10.10.10.0/30"
+            },
+            "$.weekday": {
+                "condition": "IsIn",
+                "values": ["Mon", "Tue", "Wed", "Thu", "Fri"]
+            },
+            "$.hour": {
+                "condition": "AllOf",
+                "values": [{"condition": "Gte", "value": 8}, {"condition": "Lt", "value": 19}]
+            }
+        }
+    },
+    "effect": "allow",
+    "priority": 10
+}

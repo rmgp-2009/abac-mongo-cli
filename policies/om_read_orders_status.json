@@ -1,0 +1,33 @@
+{
+    "uid": "om_read_orders_status",
+    "description": "ordersManager (chief or non-chief) may only read the orders_status collection",
+    "targets": {
+        "subject_id": "*",
+        "resource_id": "orders_status",
+        "action_id": "read"
+    },
+    "rules": {
+        "subject": {
+            "$.role": {
+                "condition": "Equals",
+                "value": "ordersManager"
+            }
+        },
+        "context": {
+            "$.ip": {
+                "condition": "CIDR",
+                "value": "10.10.10.0/30"
+            },
+            "$.weekday": {
+                "condition": "IsIn",
+                "values": ["Mon", "Tue", "Wed", "Thu", "Fri"]
+            },
+            "$.hour": {
+                "condition": "AllOf",
+                "values": [{"condition": "Gte", "value": 8}, {"condition": "Lt", "value": 19}]
+            }
+        }
+    },
+    "effect": "allow",
+    "priority": 5
+}

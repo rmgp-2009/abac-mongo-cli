@@ -1,12 +1,15 @@
 {
-  "uid": "admin_full_access",
-  "description": "Admin has full access to all resources and actions",
-  "targets": {},
-  "rules": {
-    "subject": {
-      "$.role": { "condition": "Equals", "value": "admin" }
-    }
-  },
-  "effect": "allow",
-  "priority": 100
+    "uid": "admin_full_access",
+    "description": "Admin has full access to all resources and actions",
+    "targets": {},
+    "rules": {
+        "subject": {
+            "$.role": {
+                "condition": "Equals",
+                "value": "admin"
+            }
+        }
+    },
+    "effect": "allow",
+    "priority": 100
 }

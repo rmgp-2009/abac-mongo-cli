@@ -13,17 +13,46 @@ from py_abac import PDP, Policy, Request, EvaluationAlgorithm
 from py_abac.storage.mongo import MongoStorage, MongoMigrationSet
 from py_abac.storage.migration import Migrator
 
+
+#def configure_abac_logging(log_file="abac.log"):
+ #   logger = logging.getLogger("py_abac")
+ #   logger.setLevel(logging.DEBUG)
+ #   fh = logging.FileHandler(log_file, encoding="utf-8")
+ #   fh.setLevel(logging.DEBUG)
+ #   fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+ #   fh.setFormatter(fmt)
+ #   if not any(isinstance(h, logging.FileHandler) for h in logger.handlers):
+ #       logger.addHandler(fh)
+    
+    # 3) Logger do PDP explicitamente
+ #   pdp_logger = logging.getLogger("py_abac.pdp")
+ #   pdp_logger.setLevel(logging.DEBUG)
+ #   if not any(isinstance(h, logging.FileHandler) and h.baseFilename == log_file
+ #              for h in pdp_logger.handlers):
+ #       pdp_logger.addHandler(fh)
+ #   pdp_logger.propagate = False
+ #   print(logging.root.manager.loggerDict.keys())
+
+
 def configure_abac_logging(log_file="abac.log"):
     """
-    Configure the py_abac logger to write INFO+ events to a file.
+   Configure the py_abac logger to write INFO+ events to a file.
     """
-    logger = logging.getLogger("py_abac")
-    logger.setLevel(logging.INFO)
-    fh = logging.FileHandler(log_file, encoding="utf-8")
-    fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
-    fh.setFormatter(fmt)
-    if not any(isinstance(h, logging.FileHandler) for h in logger.handlers):
-        logger.addHandler(fh)
+    # Isto limpa quaisquer handlers já registados
+    for h in logging.root.handlers[:]:
+        logging.root.removeHandler(h)
+
+    # Configura o root logger para gravar tudo (DEBUG+) apenas em file
+    logging.basicConfig(
+        level    = logging.DEBUG,
+        filename = log_file,
+        filemode = "a",   # "w" para sobrescrever, "a" para acrescentar
+        format   = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    )
+
+    # Puxa também o logger do py_abac e do PDP para DEBUG
+    logging.getLogger("py_abac").setLevel(logging.DEBUG)
+    logging.getLogger("py_abac.pdp").setLevel(logging.DEBUG)
 
 def load_policies(storage, policies_dir="policies"):
     """

@@ -1,8 +1,8 @@
 {
-  "uid": "default_deny_all",
-  "description": "Catch-all deny anything not explicitly allowed",
-  "rules": {},
-  "targets": {}, 
-  "effect": "deny",
-  "priority": 0
+    "uid": "default_deny_all",
+    "description": "Catch-all deny anything not explicitly allowed",
+    "targets": {},
+    "rules": {},
+    "effect": "deny",
+    "priority": 0
 }

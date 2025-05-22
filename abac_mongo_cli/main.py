@@ -18,6 +18,7 @@ import re
 from pymongo import MongoClient
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
+#from abac import initialize_pdp, build_request
 from abac_mongo_cli.abac import initialize_pdp, build_request
 
 # -------------------------------------------------------------------
@@ -63,20 +64,22 @@ def main_menu():
         subject_id = prompt("Enter your ID (or 'admin'): ", history=history).strip()
         # Determine role and attributes
         if subject_id.lower() == "admin":
-            subject_attrs = {"id": "admin"}
-            subject_attrs["role"] = "admin"
-            subject_attrs["userIP"] = None # making subject_attrs = {'id': 'admin', 'role': 'admin', 'userIP': None}
+            main_attrs = {"id": "admin"}
+            main_attrs["role"] = "admin"
+            main_attrs["isChief"] = None
+            main_attrs["userIP"] = None # making subject_attrs = {'id': 'admin', 'role': 'admin', 'userIP': None}
             break
         try:
-            subject_attrs = {"id": int(subject_id)}
+            main_attrs = {"id": int(subject_id)}
             #subject_id = int(subject_id)
-            subject_attrs["role"] = "ordersManager"
-            subject_attrs["isChief"] = prompt("Are you chief? [y/N]: ", history=history).strip().lower() in ("y", "yes")
+            main_attrs["role"] = "ordersManager"
+            main_attrs["isChief"] = int(prompt("Are you chief? [y/N] (Default = N): ", history=history).strip().lower() in ("y", "yes"))
+            #print(f'Chefe . {main_attrs["isChief"]}')
             ip_pattern = re.compile(r"^(25[0-5]|2[0-4]\d|[01]?\d?\d)(\.(25[0-5]|2[0-4]\d|[01]?\d?\d)){3}$")
             while True:
                 user_ip = prompt("Your IPv4 address: ", history=history).strip()
                 if ip_pattern.match(user_ip):
-                    subject_attrs["userIP"] = user_ip # making subject_attrs = {'id': 1,'role': 'ordersManager', 'isChief': T/F, 'userIP': None}
+                    main_attrs["userIP"] = user_ip # making subject_attrs = {'id': 1,'role': 'ordersManager', 'isChief': T/F, 'userIP': None}
                     break
                 else:
                     print("Invalid IP! Enter a valid IPv4 (e.g. 192.168.0.1).")
@@ -84,7 +87,7 @@ def main_menu():
         except ValueError:
             print("Invalid input!")
 
-    return subject_attrs       
+    return main_attrs       
 
 def secundary_menu(admin):
     print("\nSelect action:")
@@ -122,10 +125,12 @@ def perform_request():
 
 def shell():
     print(banner())
-    subject_attrs = main_menu()
-    subject_id = subject_attrs["id"]
-    role = subject_attrs["role"]
-    user_ip = subject_attrs["userIP"]
+    main_attrs = main_menu()
+    #subject_attrs = main_menu()
+    subject_id = main_attrs["id"]
+    subject_attrs = {"employee_id": str(subject_id), "role": main_attrs["role"], "isChief": main_attrs["isChief"]}
+    role = main_attrs["role"]
+    user_ip = main_attrs["userIP"]
 
     # Log the login event
     cli_logger.info(f"Login: user='{subject_id}' role='{role}' attrs={subject_attrs}")
@@ -157,7 +162,6 @@ def shell():
                 choice = "4"
                 collection = "py_abac_policies"
                 raw = f'{{"_id": "{prompt("Enter policy ID: ", history=history).strip()}"}}'
-                print(raw)
             else:
                 collection = prompt("Collection name: ", history=history).strip()
                 raw = prompt("Enter JSON payload (filter or document): ", history=history).strip()
@@ -183,14 +187,17 @@ def shell():
             context = {
                 "ip":      user_ip,
                 "weekday": now.strftime("%a"),
-                "hour":    now.hour
+                "hour":    10#now.hour
             }
+            
+            resource_attrs = {"employee_id": str(subject_id)}
+            action_attrs = {"method": abac_action}
 
             # Build & evaluate ABAC request
             req = build_request(
-                subject_id,             subject_attrs,
-                resource_id=collection, resource_attrs={"type": collection.rstrip("s")},
-                action_id=abac_action,  action_attrs={"method": abac_action},
+                str(subject_id),             subject_attrs,
+                resource_id=collection, resource_attrs=resource_attrs,
+                action_id=abac_action,  action_attrs=action_attrs,
                 context=context
             )
             decision = pdp.is_allowed(req)
@@ -254,3 +261,7 @@ if __name__ == "__main__":
         # Ctrl+c anywhere to end
         print("\n^C detected, exiting.")
         sys.exit(0)
+
+
+
+# TODO ver os pedidos que estão a ser mal feitos e o que é enviado. Ver também do subject_attributes pois estava a ver mal isso
