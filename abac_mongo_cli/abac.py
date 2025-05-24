@@ -13,36 +13,23 @@ from py_abac import PDP, Policy, Request, EvaluationAlgorithm
 from py_abac.storage.mongo import MongoStorage, MongoMigrationSet
 from py_abac.storage.migration import Migrator
 
-
-#def configure_abac_logging(log_file="abac.log"):
- #   logger = logging.getLogger("py_abac")
- #   logger.setLevel(logging.DEBUG)
- #   fh = logging.FileHandler(log_file, encoding="utf-8")
- #   fh.setLevel(logging.DEBUG)
- #   fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
- #   fh.setFormatter(fmt)
- #   if not any(isinstance(h, logging.FileHandler) for h in logger.handlers):
- #       logger.addHandler(fh)
-    
-    # 3) Logger do PDP explicitamente
- #   pdp_logger = logging.getLogger("py_abac.pdp")
- #   pdp_logger.setLevel(logging.DEBUG)
- #   if not any(isinstance(h, logging.FileHandler) and h.baseFilename == log_file
- #              for h in pdp_logger.handlers):
- #       pdp_logger.addHandler(fh)
- #   pdp_logger.propagate = False
- #   print(logging.root.manager.loggerDict.keys())
-
-
 def configure_abac_logging(log_file="abac.log"):
     """
-   Configure the py_abac logger to write INFO+ events to a file.
+    Configure the logging system so that all Py-ABAC events at DEBUG level
+    and above are written to the specified file.
+    This will:
+      1. Remove any existing handlers on the root logger.
+      2. Set up a FileHandler via basicConfig to capture all messages at DEBUG level and above.
+      3. Explicitly set the “py_abac” and “py_abac.pdp” loggers to DEBUG.
+
+    :param log_file: Path to the file where log entries will be appended.
+    :type log_file: str
     """
-    # Isto limpa quaisquer handlers já registados
+    # Remove any previously registered handlers
     for h in logging.root.handlers[:]:
         logging.root.removeHandler(h)
 
-    # Configura o root logger para gravar tudo (DEBUG+) apenas em file
+    # Configure the root logger to write DEBUG+ messages to log_file
     logging.basicConfig(
         level    = logging.DEBUG,
         filename = log_file,
@@ -50,32 +37,46 @@ def configure_abac_logging(log_file="abac.log"):
         format   = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
     )
 
-    # Puxa também o logger do py_abac e do PDP para DEBUG
+    # Ensure Py-ABAC’s loggers also emit DEBUG+ into the same file
     logging.getLogger("py_abac").setLevel(logging.DEBUG)
     logging.getLogger("py_abac.pdp").setLevel(logging.DEBUG)
 
 def load_policies(storage, policies_dir="policies"):
     """
-    Load all .json policy files from policies_dir into the MongoStorage.
-    """
+    Load all JSON policy files from the specified directory into the MongoStorage.
+
+    :param storage: The MongoStorage instance to which policies will be added.
+    :type storage: MongoStorage
+    :param policies_dir: Path to the directory containing policy JSON files.
+    :type policies_dir: str
+    """  
     base = os.getcwd()
     for path in glob.glob(os.path.join(base, policies_dir, "*.json")):
         try:
             with open(path, "r", encoding="utf-8") as f:
                 policy_json = json.load(f)
                 storage.add(Policy.from_json(policy_json))
-                print(f"  ✔ Loaded {policy_json.get('uid')}")
+                print(f"**** Loaded {policy_json.get('uid')} ****")
         except Exception as exc:
             # Ignore duplicates or invalid files
-            # print(f"Falhou {path}: {exc}")
-            print(f"  ⚠ Skipping {os.path.basename(path)}: {exc}")
+            print(f"!!! Skipping {os.path.basename(path)}: {exc} !!!") # Only for debug pourposes 
             pass
 
 def initialize_pdp(client, db_name="Northwind", policies_dir="policies"):
     """
     Set up the Mongo-backed storage for ABAC policies, apply migrations,
-    load policies, configure logging, and return a PDP instance.
-    """
+    load all JSON policies from the given directory, configure logging,
+    and return a configured PDP instance.
+
+    :param client: A pymongo.MongoClient connected to the MongoDB server.
+    :type client: MongoClient
+    :param db_name: Name of the database where ABAC policies are stored.
+    :type db_name: str
+    :param policies_dir: Path to the directory containing policy JSON files.
+    :type policies_dir: str
+    :return: An initialized Policy Decision Point (PDP) ready for evaluation.
+    :rtype: PDP
+    """    
     # 1) configure logging for py_abac
     configure_abac_logging()
 
@@ -86,17 +87,30 @@ def initialize_pdp(client, db_name="Northwind", policies_dir="policies"):
     # 3) load all policies/*.json
     load_policies(storage, policies_dir=policies_dir)
 
-
     # 4) return the PDP
     return PDP(storage, EvaluationAlgorithm.HIGHEST_PRIORITY)
 
-def build_request(subject_id, subject_attrs,
-                  resource_id, resource_attrs,
-                  action_id, action_attrs,
-                  context):
+def build_request(subject_id, subject_attrs, resource_id, resource_attrs, action_id, action_attrs, context):
     """
-    Create a Request object to evaluate against the PDP.
-    """
+    Create a Request object encapsulating subject, resource, action, and context for ABAC evaluation.
+
+    :param subject_id: Unique identifier of the subject (e.g., user ID or 'admin').
+    :type subject_id: str
+    :param subject_attrs: Dictionary of subject attributes (e.g., role, isChief, userIP).
+    :type subject_attrs: dict
+    :param resource_id: Identifier of the resource (e.g., collection name or document ID).
+    :type resource_id: str
+    :param resource_attrs: Dictionary of resource attributes (e.g., employee_id, type).
+    :type resource_attrs: dict
+    :param action_id: Identifier of the action to perform (e.g., "read", "create").
+    :type action_id: str
+    :param action_attrs: Dictionary of action attributes (e.g., method name).
+    :type action_attrs: dict
+    :param context: Dictionary of contextual attributes (e.g., ip, weekday, hour).
+    :type context: dict
+    :return: A Py-ABAC Request object ready for policy evaluation.
+    :rtype: AccessRequest
+    """    
     subject  = {"id": subject_id,  "attributes": subject_attrs}
     resource = {"id": resource_id, "attributes": resource_attrs}
     action   = {"id": action_id,   "attributes": action_attrs}
