@@ -54,7 +54,9 @@ You will be prompted to:
     2. Insert document
     3. Update documents
     4. Delete documents
-    5. Exit
+    5. View Policies (Admin)
+    6. Delete Policy (Admin)
+    0. Exit
 
 For each operation you enter:
 - Collection name (e.g. Orders, orders_status)
