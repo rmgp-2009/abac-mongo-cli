@@ -1,0 +1,20 @@
+abac_mongo_cli.abac module
+==========================
+
+Documentação das funções e utilitários de ABAC.
+
+.. automodule:: abac_mongo_cli.abac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+abac_mongo_cli.main module
+==========================
+
+Documentação do entry-point e loop interativo.
+
+.. automodule:: abac_mongo_cli.main
+   :members:
+   :undoc-members:
+   :show-inheritance:

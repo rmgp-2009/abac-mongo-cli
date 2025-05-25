@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>abac_mongo_cli.abac module &mdash; abac_mongo_cli 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="abac_mongo_cli documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            abac_mongo_cli
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">abac_mongo_cli.abac module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.build_request"><code class="docutils literal notranslate"><span class="pre">build_request()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.configure_abac_logging"><code class="docutils literal notranslate"><span class="pre">configure_abac_logging()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.initialize_pdp"><code class="docutils literal notranslate"><span class="pre">initialize_pdp()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.load_policies"><code class="docutils literal notranslate"><span class="pre">load_policies()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#abac-mongo-cli-main-module">abac_mongo_cli.main module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.connection"><code class="docutils literal notranslate"><span class="pre">connection()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.get_employee_id"><code class="docutils literal notranslate"><span class="pre">get_employee_id()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.login_menu"><code class="docutils literal notranslate"><span class="pre">login_menu()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.main_menu"><code class="docutils literal notranslate"><span class="pre">main_menu()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.perform_request"><code class="docutils literal notranslate"><span class="pre">perform_request()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.print_banner"><code class="docutils literal notranslate"><span class="pre">print_banner()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.shell"><code class="docutils literal notranslate"><span class="pre">shell()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">abac_mongo_cli</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">abac_mongo_cli.abac module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="abac-mongo-cli-abac-module">
+<h1>abac_mongo_cli.abac module<a class="headerlink" href="#abac-mongo-cli-abac-module" title="Link to this heading"></a></h1>
+<p>Documentação das funções e utilitários de ABAC.</p>
+<p id="module-abac_mongo_cli.abac">Helper module to initialize Py-ABAC PDP, apply migrations,
+auto-load all policies and configure py-abac logging.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.abac.build_request">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.abac.</span></span><span class="sig-name descname"><span class="pre">build_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_attrs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_attrs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_attrs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.abac.build_request" title="Link to this definition"></a></dt>
+<dd><p>Create a Request object encapsulating subject, resource, action, and context for ABAC evaluation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject_id</strong> (<em>str</em>) – Unique identifier of the subject (e.g., user ID or ‘admin’).</p></li>
+<li><p><strong>subject_attrs</strong> (<em>dict</em>) – Dictionary of subject attributes (e.g., role, isChief, userIP).</p></li>
+<li><p><strong>resource_id</strong> (<em>str</em>) – Identifier of the resource (e.g., collection name or document ID).</p></li>
+<li><p><strong>resource_attrs</strong> (<em>dict</em>) – Dictionary of resource attributes (e.g., employee_id, type).</p></li>
+<li><p><strong>action_id</strong> (<em>str</em>) – Identifier of the action to perform (e.g., “read”, “create”).</p></li>
+<li><p><strong>action_attrs</strong> (<em>dict</em>) – Dictionary of action attributes (e.g., method name).</p></li>
+<li><p><strong>context</strong> (<em>dict</em>) – Dictionary of contextual attributes (e.g., ip, weekday, hour).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Py-ABAC Request object ready for policy evaluation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>AccessRequest</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.abac.configure_abac_logging">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.abac.</span></span><span class="sig-name descname"><span class="pre">configure_abac_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'abac.log'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.abac.configure_abac_logging" title="Link to this definition"></a></dt>
+<dd><p>Configure the logging system so that all Py-ABAC events at DEBUG level
+and above are written to the specified file.
+This will:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Remove any existing handlers on the root logger.</p></li>
+<li><p>Set up a FileHandler via basicConfig to capture all messages at DEBUG level and above.</p></li>
+<li><p>Explicitly set the “py_abac” and “py_abac.pdp” loggers to DEBUG.</p></li>
+</ol>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>log_file</strong> (<em>str</em>) – Path to the file where log entries will be appended.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.abac.initialize_pdp">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.abac.</span></span><span class="sig-name descname"><span class="pre">initialize_pdp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Northwind'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policies_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'policies'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.abac.initialize_pdp" title="Link to this definition"></a></dt>
+<dd><p>Set up the Mongo-backed storage for ABAC policies, apply migrations,
+load all JSON policies from the given directory, configure logging,
+and return a configured PDP instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>MongoClient</em>) – A pymongo.MongoClient connected to the MongoDB server.</p></li>
+<li><p><strong>db_name</strong> (<em>str</em>) – Name of the database where ABAC policies are stored.</p></li>
+<li><p><strong>policies_dir</strong> (<em>str</em>) – Path to the directory containing policy JSON files.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An initialized Policy Decision Point (PDP) ready for evaluation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PDP</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.abac.load_policies">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.abac.</span></span><span class="sig-name descname"><span class="pre">load_policies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policies_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'policies'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.abac.load_policies" title="Link to this definition"></a></dt>
+<dd><p>Load all JSON policy files from the specified directory into the MongoStorage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storage</strong> (<em>MongoStorage</em>) – The MongoStorage instance to which policies will be added.</p></li>
+<li><p><strong>policies_dir</strong> (<em>str</em>) – Path to the directory containing policy JSON files.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="abac-mongo-cli-main-module">
+<h1>abac_mongo_cli.main module<a class="headerlink" href="#abac-mongo-cli-main-module" title="Link to this heading"></a></h1>
+<p>Documentação do entry-point e loop interativo.</p>
+<p id="module-abac_mongo_cli.main">Mongo ABAC CLI
+- Login by entering your employee ID (or ‘admin’ for the admin role)
+- Connects to MongoDB with hard-coded credentials (adminLocal/adminLocal)
+- Enforce Py-ABAC policies stored in MongoDB
+- Menu-driven CRUD operations
+- Logs all login events and user actions to cli.log
+- Uses prompt_toolkit.prompt() to supports the arrow clicks</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.main.connection">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.main.</span></span><span class="sig-name descname"><span class="pre">connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.main.connection" title="Link to this definition"></a></dt>
+<dd><p>Connects to MongoDB, and returns the connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subject_id</strong> (<em>str</em>) – User id</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The connection</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>MongoClient</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.main.get_employee_id">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.main.</span></span><span class="sig-name descname"><span class="pre">get_employee_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.main.get_employee_id" title="Link to this definition"></a></dt>
+<dd><p>Gets the employee_id, so it can be used to perform the requested action, so that PDP can evaluate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The employee ID (from resource arguments) to use in the action.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.main.login_menu">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.main.</span></span><span class="sig-name descname"><span class="pre">login_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.main.login_menu" title="Link to this definition"></a></dt>
+<dd><p>Shows the login menu and gets all the main user information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary of user’s main attributes, id, role, ip, etc.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.main.main_menu">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.main.</span></span><span class="sig-name descname"><span class="pre">main_menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">admin</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.main.main_menu" title="Link to this definition"></a></dt>
+<dd><p>Display the main action menu and return the user’s selection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>admin</strong> (<em>bool</em>) – Whether to include admin-only menu options.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The menu option chosen by the user.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.main.perform_request">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.main.</span></span><span class="sig-name descname"><span class="pre">perform_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pymongo_op</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subject_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.main.perform_request" title="Link to this definition"></a></dt>
+<dd><p>Execute the specified MongoDB operation, log it, and display the results.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>MongoClient</em>) – The MongoClient instance connected to the database.</p></li>
+<li><p><strong>collection</strong> (<em>str</em>) – Name of the collection to operate on.</p></li>
+<li><p><strong>pymongo_op</strong> (<em>str</em>) – The operation to perform (“find”, “insert_one”, “update_many”, “delete_many”).</p></li>
+<li><p><strong>subject_id</strong> (<em>str</em>) – Identifier of the user performing the operation.</p></li>
+<li><p><strong>payload</strong> (<em>dict</em>) – The filter or document data for the operation.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the operation succeeded, False on error.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.main.print_banner">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.main.</span></span><span class="sig-name descname"><span class="pre">print_banner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.main.print_banner" title="Link to this definition"></a></dt>
+<dd><p>Print the ASCII art banner to the console at startup.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.main.shell">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.main.</span></span><span class="sig-name descname"><span class="pre">shell</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.main.shell" title="Link to this definition"></a></dt>
+<dd><p>Start and run the interactive ABAC CLI shell.</p>
+<dl class="simple">
+<dt>This function drives the full CLI workflow:</dt><dd><ol class="arabic simple">
+<li><p>Prompts for user login via <cite>login_menu()</cite>.</p></li>
+<li><p>Connects to MongoDB using <cite>connection()</cite>.</p></li>
+<li><p>Initializes the Py-ABAC PDP (loads policies, configures logging) with <cite>initialize_pdp()</cite>.</p></li>
+<li><p>Enters a menu-driven loop via <cite>main_menu()</cite>, evaluates each request against the PDP,
+and dispatches CRUD or admin operations.</p></li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="abac_mongo_cli documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rúben Pereira.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
