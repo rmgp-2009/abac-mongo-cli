@@ -264,7 +264,6 @@ def shell():
 
     # Initialize ABAC PDP (loads policies + configures logging)
     pdp = initialize_pdp(client, db_name=DB_NAME)
-    #employee_id = None
     # Menu-driven loop
     while True:
         # Print options menu and get user option
