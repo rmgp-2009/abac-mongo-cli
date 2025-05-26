@@ -264,7 +264,7 @@ def shell():
 
     # Initialize ABAC PDP (loads policies + configures logging)
     pdp = initialize_pdp(client, db_name=DB_NAME)
-
+    #employee_id = None
     # Menu-driven loop
     while True:
         # Print options menu and get user option
@@ -279,10 +279,12 @@ def shell():
             if is_admin and choice == "5":
                 choice = "1"
                 collection = "py_abac_policies"
+                employee_id = None
                 raw = ""
             elif is_admin and choice == "6":
                 choice = "4"
                 collection = "py_abac_policies"
+                employee_id = None
                 raw = f'{{"_id": "{prompt("Enter policy ID: ", history=history).strip()}"}}'
             else:
                 collection = prompt("Collection name: ", history=history).strip()

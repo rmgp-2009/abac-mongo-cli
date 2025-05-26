@@ -20,3 +20,11 @@ test.py
 # Editor /OS
 -vscode/
 .DS_store
+
+# Docs
+docs/**
+
+# Only html
+!docs/_build/
+!docs/_build/html/
+!docs/_build/html/**
