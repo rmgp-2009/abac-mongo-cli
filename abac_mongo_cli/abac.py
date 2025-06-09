@@ -49,7 +49,8 @@ def load_policies(storage, policies_dir="policies"):
     :type storage: MongoStorage
     :param policies_dir: Path to the directory containing policy JSON files.
     :type policies_dir: str
-    """  
+    """
+    logger = logging.getLogger("py_abac")  
     base = os.getcwd()
     for path in glob.glob(os.path.join(base, policies_dir, "*.json")):
         try:
@@ -59,8 +60,54 @@ def load_policies(storage, policies_dir="policies"):
                 print(f"**** Loaded {policy_json.get('uid')} ****")
         except Exception as exc:
             # Ignore duplicates or invalid files
-            print(f"!!! Skipping {os.path.basename(path)}: {exc} !!!") # Only for debug pourposes 
+            #print(f"!!! Skipping {os.path.basename(path)}: {exc} !!!") # Only for debug pourposes 
+            logger.error(f"Skipping policy file '{os.path.basename(path)}': {exc}")
             pass
+
+def delete_policy(client, policy_uid):
+    """
+    Deletes a policy from MongoStorage.
+
+    :param storage: The MongoStorage instance to which policies will be added.
+    :type storage: MongoStorage
+    :param policy_uid: Policy uid
+    :type policy_uid: str
+    """    
+    logger = logging.getLogger("py_abac")
+    storage = MongoStorage(client, db_name="Northwind")
+    try:
+        storage.delete(policy_uid)
+        print(f"**** Policy {policy_uid} deleted ****")
+        print(f"**** Remember to delete the policy JSON from Policies directory ****")
+    except Exception as exc:
+        logger.error(f"Failed to dele policy '{policy_uid}': {exc}")
+        pass
+
+def update_policy(client, policy_name, policies_dir="policies"):
+    """
+    Update the ABAC policy with the given name by reloading its JSON file.
+
+    :param client: A pymongo.MongoClient connected to the MongoDB server.
+    :type client: MongoClient
+    :param policy_name: Filename (without .json) of the policy to update.
+    :type policy_name: _str
+    :param policies_dir: Path to the directory containing policy JSON files.
+    :type policies_dir: str
+    """    
+    logger = logging.getLogger("py_abac")
+    path = os.path.join(os.getcwd(), policies_dir, f"{policy_name}.json")
+    storage = MongoStorage(client, db_name="Northwind")
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            policy_json = json.load(f)
+            storage.update(Policy.from_json(policy_json))
+            print(f"**** Updated {policy_json.get('uid')} ****")
+    except Exception as exc:
+        #print(f"!!! Skipping {os.path.basename(path)}: {exc} !!!") # Only for debug pourposes 
+        logger.error(f"Skipping policy file '{os.path.basename(path)}': {exc}")
+        pass
+
+
 
 def initialize_pdp(client, db_name="Northwind", policies_dir="policies"):
     """

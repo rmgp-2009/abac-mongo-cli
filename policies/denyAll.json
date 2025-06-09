@@ -4,5 +4,5 @@
     "targets": {},
     "rules": {},
     "effect": "deny",
-    "priority": 0
+    "priority": 1
 }

@@ -18,7 +18,7 @@ import re
 from pymongo import MongoClient
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
-from abac_mongo_cli.abac import initialize_pdp, build_request
+from abac_mongo_cli.abac import initialize_pdp, build_request, update_policy, delete_policy
 
 # -------------------------------------------------------------------
 # --- MongoDB connection settings (hard-coded)-----------------------
@@ -126,6 +126,7 @@ def main_menu(admin):
     if admin:
         print(" 5) Show policies")
         print(" 6) Delete policy")
+        print(" 7) Update policy")
     print(" 0) Exit")
     return prompt("> ", history=history).strip()
 
@@ -272,7 +273,7 @@ def shell():
             cli_logger.info(f"Exit: user='{subject_id}'")
             print("Goodbye!")
             break
-        elif (choice not in ("1", "2", "3", "4") and not is_admin) or (choice not in ("1", "2", "3", "4", "5", "6") and is_admin):
+        elif (choice not in ("1", "2", "3", "4") and not is_admin) or (choice not in ("1", "2", "3", "4", "5", "6", "7") and is_admin):
             print("!!! Invalid option. Try again!")
         else:
             if is_admin and choice == "5":
@@ -281,10 +282,14 @@ def shell():
                 employee_id = None
                 raw = ""
             elif is_admin and choice == "6":
-                choice = "4"
-                collection = "py_abac_policies"
-                employee_id = None
-                raw = f'{{"_id": "{prompt("Enter policy ID: ", history=history).strip()}"}}'
+                policy_uid = prompt("Enter Enter policy ID: ", history=history).strip()
+                delete_policy(client, policy_uid)
+                continue
+            elif is_admin and choice == "7":
+                filename = prompt("Enter JSON file name without the extension (ex: policyJson): ", history=history).strip()
+                update_policy(client, filename)
+                continue
+
             else:
                 collection = prompt("Collection name: ", history=history).strip()
                 employee_id = get_employee_id() if not is_admin else None
