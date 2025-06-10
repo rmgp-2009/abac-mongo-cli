@@ -1,0 +1,21 @@
+{
+    "uid": "om_invoices_clearance_create_delete",
+    "description": "Subjects with clearance ≥ 3 may create and delete invoices",
+    "targets": {
+        "subject_id": "*",
+        "resource_id": "invoices",
+        "action_id": "*"
+    },
+    "rules": {
+        "action": [{"$.method": {"condition": "Equals", "value": "create"}},
+                   {"$.method": {"condition": "Equals", "value": "delete"}}],
+	"resource": {
+		"$.classification": {
+			"condition": "IsInAttribute",
+			"ace": "subject",
+			"path": "$.clearance"
+		}
+	}},
+    "effect": "allow",
+    "priority": 30
+}

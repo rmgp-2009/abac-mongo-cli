@@ -89,13 +89,16 @@ def login_menu():
             main_attrs = {"id": "admin"}
             main_attrs["role"] = "admin"
             main_attrs["isChief"] = None
-            main_attrs["userIP"] = None # making subject_attrs = {'id': 'admin', 'role': 'admin', 'userIP': None}
+            main_attrs["userIP"] = None
+            main_attrs["clearance"] = None # making subject_attrs = {'id': 'admin', 'role': 'admin', 'userIP': None, 'clearance': None}
             break
         try:
             main_attrs = {"id": int(subject_id)}
             main_attrs["role"] = "ordersManager"
             main_attrs["isChief"] = int(prompt("Are you chief? [y/N] (Default = N): ", history=history).strip().lower() in ("y", "yes"))
             ip_pattern = re.compile(r"^(25[0-5]|2[0-4]\d|[01]?\d?\d)(\.(25[0-5]|2[0-4]\d|[01]?\d?\d)){3}$")
+            #############################3
+            main_attrs["clearance"] = get_clearance(False)
             while True:
                 user_ip = prompt("Your IPv4 address: ", history=history).strip()
                 if ip_pattern.match(user_ip):
@@ -156,6 +159,24 @@ def connection(subject_id):
 
     print("+++ Login successful. +++\n")
     return client
+
+################################################
+def get_clearance(action):
+    message = "Enter the action clearance level (1-3): " if action else "Enter your clearance level (1-3): "
+    while True:
+        try:
+            value = int(input(message))
+            if 1 <= value <= 3:
+                if action:
+                    return value
+                return list(range(1, value+1))
+            else:
+                print("Invalid clearance level!")
+        except ValueError:
+            print("Invalid clearance level!")
+#############################################
+
+
 
 def perform_request(client, collection, pymongo_op, subject_id, payload):
     """
@@ -252,10 +273,11 @@ def shell():
     # Set main attributes (user_id, role, IP, etc.)
     main_attrs = login_menu()
     subject_id = main_attrs["id"]
-    subject_attrs = {"employee_id": str(subject_id), "role": main_attrs["role"], "isChief": main_attrs["isChief"]}
+    subject_attrs = {"employee_id": str(subject_id), "role": main_attrs["role"], "isChief": main_attrs["isChief"], "clearance": main_attrs["clearance"]}
     role = main_attrs["role"]
     user_ip = main_attrs["userIP"]
     is_admin = (role == "admin")
+    resource_attrs = {"employee_id": None}
 
     # Log the login event
     cli_logger.info(f"Login: user='{subject_id}' role='{role}' attrs={subject_attrs}")
@@ -289,10 +311,12 @@ def shell():
                 filename = prompt("Enter JSON file name without the extension (ex: policyJson): ", history=history).strip()
                 update_policy(client, filename)
                 continue
-
             else:
                 collection = prompt("Collection name: ", history=history).strip()
-                employee_id = get_employee_id() if not is_admin else None
+                if not is_admin and not main_attrs["isChief"]:
+                    resource_attrs = {"employee_id": get_employee_id()}
+                #employee_id = get_employee_id() if not is_admin else None
+                resource_attrs["classification"] = get_clearance(True)
                 raw = prompt("Enter JSON payload (filter or document): ", history=history).strip()
             try:
                 payload = json.loads(raw) if raw else {}
@@ -302,12 +326,12 @@ def shell():
                 continue
 
             abac_action, pymongo_op = action_map[choice]
-            resource_attrs = {"employee_id": employee_id}
+            #resource_attrs = {"employee_id": employee_id}
             action_attrs = {"method": abac_action}
             context = {
                 "ip":      user_ip,
                 "weekday": datetime.now().strftime("%a"), # Get day as Mon, Tue, etc.
-                "hour":    datetime.now().hour
+                "hour":    10#datetime.now().hour
             }
             
             

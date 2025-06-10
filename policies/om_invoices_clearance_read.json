@@ -1,0 +1,20 @@
+{
+    "uid": "om_invoices_clearance_read",
+    "description": "Subjects with clearance ≥ 1 may read invoices",
+    "targets": {
+        "subject_id": "*",
+        "resource_id": "invoices",
+        "action_id": "read"
+    },
+    "rules": {
+        "resource": {
+            "$.classification": {
+                "condition": "IsInAttribute",
+                "ace": "subject",
+                "path": "$.clearance"
+            }
+        }
+    },
+    "effect": "allow",
+    "priority": 10
+}

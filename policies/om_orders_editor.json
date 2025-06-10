@@ -1,0 +1,19 @@
+{
+    "uid": "om_orders_editor",
+    "description": "orders editors can insert and update orders",
+    "targets": {
+        "subject_id": "*",
+        "resource_id": "orders",
+        "action_id": ["read", "update"]
+    },
+    "rules": {
+        "context": {
+            "$.ip": {
+                "condition": "CIDR",
+                "value": "10.10.20.0/24"
+            }
+        }
+    },
+    "effect": "allow",
+    "priority": 10
+}
