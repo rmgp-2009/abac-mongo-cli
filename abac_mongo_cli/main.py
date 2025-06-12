@@ -18,7 +18,7 @@ import re
 from pymongo import MongoClient
 from prompt_toolkit import prompt
 from prompt_toolkit.history import FileHistory
-from abac_mongo_cli.abac import initialize_pdp, build_request, update_policy, delete_policy
+from abac_mongo_cli.abac import initialize_pdp, build_request, update_policy, delete_policy, get_policies
 
 # -------------------------------------------------------------------
 # --- MongoDB connection settings (hard-coded)-----------------------
@@ -299,10 +299,12 @@ def shell():
             print("!!! Invalid option. Try again!")
         else:
             if is_admin and choice == "5":
-                choice = "1"
-                collection = "py_abac_policies"
-                employee_id = None
-                raw = ""
+                #choice = "1"
+                #collection = "py_abac_policies"
+                #employee_id = None
+                #raw = ""
+                get_policies(client)
+                continue
             elif is_admin and choice == "6":
                 policy_uid = prompt("Enter Enter policy ID: ", history=history).strip()
                 delete_policy(client, policy_uid)
@@ -331,7 +333,10 @@ def shell():
             context = {
                 "ip":      user_ip,
                 "weekday": datetime.now().strftime("%a"), # Get day as Mon, Tue, etc.
-                "hour":    10#datetime.now().hour
+                "hour":    datetime.now().hour,
+                "year":    datetime.now().year,
+                "month":   datetime.now().month,
+                "day":     datetime.now().day
             }
             
             

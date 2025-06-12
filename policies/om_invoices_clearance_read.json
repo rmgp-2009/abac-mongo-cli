@@ -13,7 +13,13 @@
                 "ace": "subject",
                 "path": "$.clearance"
             }
-        }
+        },
+        "subject": {
+			"$.role": {
+				"condition": "Equals",
+				"value": "ordersManager"
+			}
+		}
     },
     "effect": "allow",
     "priority": 10

@@ -103,10 +103,48 @@ def update_policy(client, policy_name, policies_dir="policies"):
             storage.update(Policy.from_json(policy_json))
             print(f"**** Updated {policy_json.get('uid')} ****")
     except Exception as exc:
-        #print(f"!!! Skipping {os.path.basename(path)}: {exc} !!!") # Only for debug pourposes 
+        print(f"!!! Skipping {os.path.basename(path)}: {exc} !!!") # Only for debug pourposes 
         logger.error(f"Skipping policy file '{os.path.basename(path)}': {exc}")
         pass
 
+def get_policies(client):
+    """
+    Prints all access control policies from Mongo storage in pages of 3,
+    clearing the terminal between pages. Press Enter to continue.
+
+    :param client: A pymongo.MongoClient connected to the MongoDB server.
+    :type client: MongoClient
+    """
+    logger = logging.getLogger("py_abac")
+    storage = MongoStorage(client, db_name="Northwind")
+    page_size = 3
+    offset = 0
+    page = 1
+
+    try:
+        while True:
+            policies = list(storage.get_all(limit=page_size, offset=offset))
+            if not policies:
+                print("\n[END OF POLICIES]")
+                break
+
+            os.system('clear' if os.name == 'posix' else 'cls')  # limpa terminal
+            print(f"--- Page {page} (offset={offset}) ---\n")
+
+            for policy in policies:
+                try:
+                    pretty = json.dumps(policy.to_json(), indent=3, ensure_ascii=False)
+                    print(pretty)
+                    print("-" * 80)
+                except Exception as exc:
+                    logger.error(f"Error converting policy UID={policy.uid}: {exc}")
+
+            offset += page_size
+            page += 1
+            input("Press Enter to continue...")
+
+    except Exception as exc:
+        logger.error(f"Error obtaining policies: {exc}")
 
 
 def initialize_pdp(client, db_name="Northwind", policies_dir="policies"):
@@ -162,3 +200,4 @@ def build_request(subject_id, subject_attrs, resource_id, resource_attrs, action
     resource = {"id": resource_id, "attributes": resource_attrs}
     action   = {"id": action_id,   "attributes": action_attrs}
     return Request(subject, resource, action, context)
+
