@@ -46,12 +46,16 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">abac_mongo_cli.abac module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.build_request"><code class="docutils literal notranslate"><span class="pre">build_request()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.configure_abac_logging"><code class="docutils literal notranslate"><span class="pre">configure_abac_logging()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.delete_policy"><code class="docutils literal notranslate"><span class="pre">delete_policy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.get_policies"><code class="docutils literal notranslate"><span class="pre">get_policies()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.initialize_pdp"><code class="docutils literal notranslate"><span class="pre">initialize_pdp()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.load_policies"><code class="docutils literal notranslate"><span class="pre">load_policies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.abac.update_policy"><code class="docutils literal notranslate"><span class="pre">update_policy()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#abac-mongo-cli-main-module">abac_mongo_cli.main module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.connection"><code class="docutils literal notranslate"><span class="pre">connection()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.get_clearance"><code class="docutils literal notranslate"><span class="pre">get_clearance()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.get_employee_id"><code class="docutils literal notranslate"><span class="pre">get_employee_id()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.login_menu"><code class="docutils literal notranslate"><span class="pre">login_menu()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#abac_mongo_cli.main.main_menu"><code class="docutils literal notranslate"><span class="pre">main_menu()</span></code></a></li>
@@ -120,18 +124,40 @@ auto-load all policies and configure py-abac logging.</p>
 <dt class="sig sig-object py" id="abac_mongo_cli.abac.configure_abac_logging">
 <span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.abac.</span></span><span class="sig-name descname"><span class="pre">configure_abac_logging</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'abac.log'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.abac.configure_abac_logging" title="Link to this definition"></a></dt>
 <dd><p>Configure the logging system so that all Py-ABAC events at DEBUG level
-and above are written to the specified file.
-This will:</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Remove any existing handlers on the root logger.</p></li>
-<li><p>Set up a FileHandler via basicConfig to capture all messages at DEBUG level and above.</p></li>
-<li><p>Explicitly set the “py_abac” and “py_abac.pdp” loggers to DEBUG.</p></li>
-</ol>
-</div></blockquote>
+and above are written to the specified file.</p>
+<p>This will:
+1. Remove any existing handlers on the root logger.
+2. Set up a FileHandler via basicConfig to capture all messages at DEBUG level and above.
+3. Explicitly set the “py_abac” and “py_abac.pdp” loggers to DEBUG.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>log_file</strong> (<em>str</em>) – Path to the file where log entries will be appended.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.abac.delete_policy">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.abac.</span></span><span class="sig-name descname"><span class="pre">delete_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy_uid</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.abac.delete_policy" title="Link to this definition"></a></dt>
+<dd><p>Deletes a policy from MongoStorage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>storage</strong> (<em>MongoStorage</em>) – The MongoStorage instance to which policies will be added.</p></li>
+<li><p><strong>policy_uid</strong> (<em>str</em>) – Policy uid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.abac.get_policies">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.abac.</span></span><span class="sig-name descname"><span class="pre">get_policies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.abac.get_policies" title="Link to this definition"></a></dt>
+<dd><p>Prints all access control policies from Mongo storage in pages of 3,
+clearing the terminal between pages. Press Enter to continue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>client</strong> (<em>MongoClient</em>) – A pymongo.MongoClient connected to the MongoDB server.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -173,6 +199,21 @@ and return a configured PDP instance.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.abac.update_policy">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.abac.</span></span><span class="sig-name descname"><span class="pre">update_policy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policy_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">policies_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'policies'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.abac.update_policy" title="Link to this definition"></a></dt>
+<dd><p>Update the ABAC policy with the given name by reloading its JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>client</strong> (<em>MongoClient</em>) – A pymongo.MongoClient connected to the MongoDB server.</p></li>
+<li><p><strong>policy_name</strong> (<em>_str</em>) – Filename (without .json) of the policy to update.</p></li>
+<li><p><strong>policies_dir</strong> (<em>str</em>) – Path to the directory containing policy JSON files.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="abac-mongo-cli-main-module">
 <h1>abac_mongo_cli.main module<a class="headerlink" href="#abac-mongo-cli-main-module" title="Link to this heading"></a></h1>
@@ -197,6 +238,24 @@ and return a configured PDP instance.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>MongoClient</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="abac_mongo_cli.main.get_clearance">
+<span class="sig-prename descclassname"><span class="pre">abac_mongo_cli.main.</span></span><span class="sig-name descname"><span class="pre">get_clearance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#abac_mongo_cli.main.get_clearance" title="Link to this definition"></a></dt>
+<dd><p>Prompt for a clearance level and return it. If <cite>action</cite> is True,
+returns an int (1–3); otherwise returns a list from 1 up to the entered level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>bool</em>) – True to get a single action clearance, False for a user clearance list.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An int (if action) or list of ints (if not).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or list[int]</p>
 </dd>
 </dl>
 </dd></dl>
