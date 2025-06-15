@@ -3,6 +3,9 @@
 Helper module to initialize Py-ABAC PDP, apply migrations,
 auto-load all policies and configure py-abac logging.
 """
+__author__    = "Rúben Pereira"
+__copyright__ = "2025, Rúben Pereira"
+__license__   = "MIT"
 
 import glob
 import json
@@ -17,10 +20,11 @@ def configure_abac_logging(log_file="abac.log"):
     """
     Configure the logging system so that all Py-ABAC events at DEBUG level
     and above are written to the specified file.
+    
     This will:
-      1. Remove any existing handlers on the root logger.
-      2. Set up a FileHandler via basicConfig to capture all messages at DEBUG level and above.
-      3. Explicitly set the “py_abac” and “py_abac.pdp” loggers to DEBUG.
+    1. Remove any existing handlers on the root logger.
+    2. Set up a FileHandler via basicConfig to capture all messages at DEBUG level and above.
+    3. Explicitly set the “py_abac” and “py_abac.pdp” loggers to DEBUG.
 
     :param log_file: Path to the file where log entries will be appended.
     :type log_file: str
@@ -128,7 +132,7 @@ def get_policies(client):
                 print("\n[END OF POLICIES]")
                 break
 
-            os.system('clear' if os.name == 'posix' else 'cls')  # limpa terminal
+            os.system('clear' if os.name == 'posix' else 'cls')  # Clears terminal
             print(f"--- Page {page} (offset={offset}) ---\n")
 
             for policy in policies:

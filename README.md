@@ -48,18 +48,22 @@ You will be prompted to:
 1. Enter your ID (or type admin for the super-user).
 2. If you log in as an ordersManager, you'll be asked:
     - "Are you chief? [y/N]"
-    - "Your IP address:"
+    - "Enter your clearance level (1-3):"
+    - "Your IPv4 address:"
 3. Then you'll see a menu to:
     1. Find documents
     2. Insert document
     3. Update documents
     4. Delete documents
-    5. View Policies (Admin)
+    5. Show Policies (Admin)
     6. Delete Policy (Admin)
+    7. Update Policy (Admin)
     0. Exit
 
 For each operation you enter:
 - Collection name (e.g. Orders, orders_status)
+- The action clearance level
+- The `employee_id` (Depends if the user is nonChief)
 - A single-line JSON payload for filter, document, or update spec
 
 ## Policies

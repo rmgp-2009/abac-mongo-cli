@@ -8,6 +8,9 @@ Mongo ABAC CLI
 - Logs all login events and user actions to cli.log
 - Uses prompt_toolkit.prompt() to supports the arrow clicks
 """
+__author__    = "Rúben Pereira"
+__copyright__ = "2025, Rúben Pereira"
+__license__   = "MIT"
 
 import sys
 import json
@@ -97,8 +100,7 @@ def login_menu():
             main_attrs["role"] = "ordersManager"
             main_attrs["isChief"] = int(prompt("Are you chief? [y/N] (Default = N): ", history=history).strip().lower() in ("y", "yes"))
             ip_pattern = re.compile(r"^(25[0-5]|2[0-4]\d|[01]?\d?\d)(\.(25[0-5]|2[0-4]\d|[01]?\d?\d)){3}$")
-            #############################3
-            main_attrs["clearance"] = get_clearance(False)
+            main_attrs["clearance"] = get_clearance(False) # Get user clearance level, levels list
             while True:
                 user_ip = prompt("Your IPv4 address: ", history=history).strip()
                 if ip_pattern.match(user_ip):
@@ -160,8 +162,17 @@ def connection(subject_id):
     print("+++ Login successful. +++\n")
     return client
 
-################################################
 def get_clearance(action):
+    """
+    Prompt for a clearance level and return it. If `action` is True, 
+    returns an int (1–3); otherwise returns a list from 1 up to the entered level.
+
+
+    :param action: True to get a single action clearance, False for a user clearance list.
+    :type action: bool
+    :return: An int (if action) or list of ints (if not).
+    :rtype: int or list[int]
+    """    
     message = "Enter the action clearance level (1-3): " if action else "Enter your clearance level (1-3): "
     while True:
         try:
@@ -174,8 +185,6 @@ def get_clearance(action):
                 print("Invalid clearance level!")
         except ValueError:
             print("Invalid clearance level!")
-#############################################
-
 
 
 def perform_request(client, collection, pymongo_op, subject_id, payload):
@@ -273,7 +282,8 @@ def shell():
     # Set main attributes (user_id, role, IP, etc.)
     main_attrs = login_menu()
     subject_id = main_attrs["id"]
-    subject_attrs = {"employee_id": str(subject_id), "role": main_attrs["role"], "isChief": main_attrs["isChief"], "clearance": main_attrs["clearance"]}
+    subject_attrs = {"employee_id": str(subject_id), "role": main_attrs["role"], "isChief": main_attrs["isChief"], 
+                     "clearance": main_attrs["clearance"]}
     role = main_attrs["role"]
     user_ip = main_attrs["userIP"]
     is_admin = (role == "admin")
@@ -299,10 +309,6 @@ def shell():
             print("!!! Invalid option. Try again!")
         else:
             if is_admin and choice == "5":
-                #choice = "1"
-                #collection = "py_abac_policies"
-                #employee_id = None
-                #raw = ""
                 get_policies(client)
                 continue
             elif is_admin and choice == "6":
@@ -317,8 +323,7 @@ def shell():
                 collection = prompt("Collection name: ", history=history).strip()
                 if not is_admin and not main_attrs["isChief"]:
                     resource_attrs = {"employee_id": get_employee_id()}
-                #employee_id = get_employee_id() if not is_admin else None
-                resource_attrs["classification"] = get_clearance(True)
+                resource_attrs["classification"] = get_clearance(True) # Get action clearance
                 raw = prompt("Enter JSON payload (filter or document): ", history=history).strip()
             try:
                 payload = json.loads(raw) if raw else {}
@@ -328,7 +333,6 @@ def shell():
                 continue
 
             abac_action, pymongo_op = action_map[choice]
-            #resource_attrs = {"employee_id": employee_id}
             action_attrs = {"method": abac_action}
             context = {
                 "ip":      user_ip,
@@ -339,7 +343,6 @@ def shell():
                 "day":     datetime.now().day
             }
             
-            
             # Build & evaluate ABAC request
             req = build_request(
                 str(subject_id),             subject_attrs,
@@ -347,6 +350,7 @@ def shell():
                 action_id=abac_action,  action_attrs=action_attrs,
                 context=context
             )
+            
             
             # Get PDP decision
             decision = pdp.is_allowed(req)

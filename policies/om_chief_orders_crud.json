@@ -21,14 +21,6 @@
             "$.ip": {
                 "condition": "CIDR",
                 "value": "10.10.10.0/30"
-            },
-            "$.weekday": {
-                "condition": "IsIn",
-                "values": ["Mon", "Tue", "Wed", "Thu", "Fri"]
-            },
-            "$.hour": {
-                "condition": "AllOf",
-                "values": [{"condition": "Gte", "value": 8}, {"condition": "Lt", "value": 19}]
             }
         }
     },

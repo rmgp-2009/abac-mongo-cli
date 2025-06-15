@@ -17,6 +17,11 @@ dependencies = [
   "prompt_toolkit"
 ]
 
+urls = { 
+  "Repository"     = "https://github.com/rmgp-2009/abac-mongo-cli",
+  "Documentation"  = "https://github.com/rmgp-2009/abac-mongo-cli#readme"
+}
+
 [project.scripts]
 northwind = "abac_mongo_cli.main:shell"
 
